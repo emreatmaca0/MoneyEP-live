@@ -5,20 +5,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>MoneyEP | Budget Management</title>
-    <link rel="stylesheet" href="moneyep/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
 </head>
 
 <body>
 <nav class="navbar navbar-expand-md fixed-top navbar-shrink py-3 navbar-light" id="mainNav">
-    <div class="container"><a class="navbar-brand d-flex align-items-center" href="/moneyep"><span>MoneyEP</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+    <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span>MoneyEP</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navcol-1">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item"><a class="nav-link" href="https://exampleproject.dev">Projects</a></li>
-                <li class="nav-item"><a class="nav-link" href="/moneyep/contacts">Contacts</a></li>
-                <li class="nav-item"><a class="nav-link" href="/moneyep/faq">FAQ</a></li>
+                <li class="nav-item"><a class="nav-link" href="/contacts">Contacts</a></li>
+                <li class="nav-item"><a class="nav-link" href="/faq">FAQ</a></li>
             </ul>
-            <div class="btn-group" role="group"><a class="btn btn-primary" role="button" href="/moneyep/signup">Sign Up</a><a class="btn btn-primary" role="button" style="background: rgb(220,212,39);border-color: rgb(255,210,0);/*box-shadow: none;*/" href="/moneyep/login">Login</a></div>
+            <div class="btn-group" role="group"><a class="btn btn-primary" role="button" href="/signup">Sign Up</a><a class="btn btn-primary" role="button" style="background: rgb(220,212,39);border-color: rgb(255,210,0);/*box-shadow: none;*/" href="/login">Login</a></div>
         </div>
     </div>
 </nav>
@@ -73,7 +73,7 @@
     </div>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.min.js" integrity="sha512-fHY2UiQlipUq0dEabSM4s+phmn+bcxSYzXP4vAXItBvBHU7zAM/mkhCZjtBEIJexhOMzZbgFlPLuErlJF2b+0g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="moneyep/js/startup-modern.js"></script>
+<script src="/js/startup-modern.js"></script>
 </body>
 
 </html>
