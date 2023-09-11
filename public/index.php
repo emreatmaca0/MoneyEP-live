@@ -37,7 +37,7 @@ require FCPATH . '../../moneyep_files/app/Config/Paths.php';
 $paths = new Config\Paths();
 
 // Location of the framework bootstrap file.
-require rtrim($paths->systemDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'bootstrap.php';
+require '/home/geotechd/domains/exampleproject.dev/moneyep_files/vendor/codeigniter4/framework/system/bootstrap.php';
 
 // Load environment settings from .env files into $_SERVER and $_ENV
 require_once SYSTEMPATH . 'Config/DotEnv.php';
