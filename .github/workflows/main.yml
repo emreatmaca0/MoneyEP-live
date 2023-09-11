@@ -14,4 +14,20 @@ jobs:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: ./domains/exampleproject.dev/deneme1
+        server-dir: ./domains/exampleproject.dev/moneyep_files/
+        exclude: |
+          **/public/**
+
+          
+    - name: Public Files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./public/./
+        server-dir: ./domains/exampleproject.dev/public_html/moneyep/
+        exclude: |
+          **/public/**
+        
+      
