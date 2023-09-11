@@ -1,0 +1,25 @@
+name: Deploy to FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install LFTP
+        run: sudo apt-get install lftp
+
+      - name: Deploy Specific Folder to FTP
+        run: |
+          lftp -e "set ftp:ssl-allow no; open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }}; cd /domains/exampleproject.dev/deneme1; mirror -R public" -d
+
+      - name: Deploy Remaining Files to Another FTP Directory
+        run: |
+          lftp -e "set ftp:ssl-allow no; open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }}; cd /domains/exampleproject.dev/deneme2; mirror -R --exclude public" -d
