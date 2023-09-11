@@ -1,6 +1,6 @@
 # Demo
-Email:
-
+email:
+password:
 
 # CodeIgniter 4 Application Starter
 
