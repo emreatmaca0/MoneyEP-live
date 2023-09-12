@@ -26,10 +26,10 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'localhost',
-        'username'     => '',
-        'password'     => '',
-        'database'     => '',
+        'hostname'     => 'mt-melkor-da.guzelhosting.com',
+        'username'     => 'geotechd_moneyep',
+        'password'     => 'acerpc28',
+        'database'     => 'geotechd_moneyep',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,

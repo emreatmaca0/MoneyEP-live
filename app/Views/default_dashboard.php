@@ -15,11 +15,11 @@
     <a class="navbar-brand logo" href="#">
         <img src="https://logos-world.net/wp-content/uploads/2021/07/Money-Logo.png" alt="MoneyEP" width="100" height="80">
     </a>
-    <a href="/moneyep/dashboard"><box-icon type='solid' name='dashboard' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>Dashboard</a>
-    <a href="/moneyep/myassets"><box-icon name='money-withdraw' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>My Assets</a>
-    <a href="/moneyep/mydebts"><box-icon name='stopwatch' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>My Debts</a>
-    <a href="/moneyep/account-settings"><box-icon name='cog' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>Settings</a>
-    <a href="/moneyep/logout"><box-icon name='log-out-circle' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>Log out</a>
+    <a href="dashboard"><box-icon type='solid' name='dashboard' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>Dashboard</a>
+    <a href="myassets"><box-icon name='money-withdraw' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>My Assets</a>
+    <a href="mydebts"><box-icon name='stopwatch' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>My Debts</a>
+    <a href="account-settings"><box-icon name='cog' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>Settings</a>
+    <a href="logout"><box-icon name='log-out-circle' style="vertical-align: middle; margin-right: 11px" color="#566A7F" pull="left"></box-icon>Log out</a>
 </div>
 <div class="content">
     <?= $this->renderSection('dash_content') ?>

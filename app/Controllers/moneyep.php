@@ -17,7 +17,7 @@ class moneyep extends BaseController
 //            ];
 //        $usermodel->insert($data);
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('/moneyep/dashboard');
+            return redirect()->to('dashboard');
         }
         else {
             return view('moneyep');
@@ -27,7 +27,7 @@ class moneyep extends BaseController
     public function login()
     {
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('moneyep/dashboard');
+            return redirect()->to('dashboard');
         }
         else {
             helper(['form', 'url']);
@@ -47,7 +47,7 @@ class moneyep extends BaseController
                     $session->set('name', $user['name']);
                     $session->set('email', $user['email']);
                     $session->set('isLoggedIn', true);
-                    return redirect()->to('moneyep/dashboard');
+                    return redirect()->to('dashboard');
                 } else {
                     $data['login_error'] = 'Wrong email or password.';
                     return view('login', $data);
@@ -62,7 +62,7 @@ class moneyep extends BaseController
     public function signup()
     {
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('/moneyep/dashboard');
+            return redirect()->to('dashboard');
         }
         else {
             helper(['form', 'url', 'security']);
@@ -92,7 +92,7 @@ class moneyep extends BaseController
                     $session->set('name', $clean_name);
                     $session->set('email', $clean_email);
                     $session->set('isLoggedIn', true);
-                    return redirect()->to('/moneyep/dashboard');
+                    return redirect()->to('dashboard');
                 } else {
                     $data['validation'] = $validation->getErrors();
                     if ($this->request->getPost('password') != $this->request->getPost('password_repeat')) {
@@ -118,7 +118,7 @@ class moneyep extends BaseController
             'user_name' => $user_name
         ];
         if(!$session->get('isLoggedIn')) {
-            return redirect()->to('moneyep/login');
+            return redirect()->to('login');
         }
         else
         {
@@ -131,7 +131,7 @@ class moneyep extends BaseController
     {
         $session = session();
         if(!$session->get('isLoggedIn')) {
-            return redirect()->to('moneyep/login');
+            return redirect()->to('login');
         }
         else
         {
@@ -150,7 +150,7 @@ class moneyep extends BaseController
             'user_name' => $user_name
         ];
         if(!$session->get('isLoggedIn')) {
-            return redirect()->to('moneyep/login');
+            return redirect()->to('login');
         }
         else
         {
@@ -169,7 +169,7 @@ class moneyep extends BaseController
     {
         $session = session();
         if(!$session->get('isLoggedIn')) {
-            return redirect()->to('moneyep/login');
+            return redirect()->to('login');
         }
         else
         {
@@ -196,7 +196,7 @@ class moneyep extends BaseController
                     ];
                     $accountModel->insert($accountData);
 
-                    return redirect()->to('/moneyep/myassets');
+                    return redirect()->to('myassets');
                 } else {
                     $data['validation_error'] = $validation->getErrors();
                     return view('myassets', $data);
