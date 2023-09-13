@@ -26,7 +26,7 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'localhost',
+        'hostname'     => 'mt-melkor-da.guzelhosting.com',
         'username'     => 'geotechd_moneyep',
         'password'     => 'acerpc28',
         'database'     => 'geotechd_moneyep',

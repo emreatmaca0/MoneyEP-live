@@ -31,15 +31,15 @@ if (getcwd() . DIRECTORY_SEPARATOR !== FCPATH) {
 
 // Load our paths config file
 // This is the line that might need to be changed, depending on your folder structure.
- require FCPATH . '../../moneyep_files/app/Config/Paths.php'; //production
-// require FCPATH . '../app/Config/Paths.php'; //development
+// require FCPATH . '../../moneyep_files/app/Config/Paths.php'; //production
+ require FCPATH . '../app/Config/Paths.php'; //development
 // ^^^ Change this line if you move your application folder
 
 $paths = new Config\Paths();
 
 // Location of the framework bootstrap file.
-require '/home/geotechd/domains/exampleproject.dev/moneyep_files/vendor/codeigniter4/framework/system/bootstrap.php'; //production
-// require FCPATH . '../vendor/codeigniter4/framework/system/bootstrap.php'; //development
+// require '/home/geotechd/domains/exampleproject.dev/moneyep_files/vendor/codeigniter4/framework/system/bootstrap.php'; //production
+ require FCPATH . '../vendor/codeigniter4/framework/system/bootstrap.php'; //development
 
 // Load environment settings from .env files into $_SERVER and $_ENV
 require_once SYSTEMPATH . 'Config/DotEnv.php';

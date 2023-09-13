@@ -14,10 +14,10 @@
                     <path d="M20 7V5c0-1.103-.897-2-2-2H5C3.346 3 2 4.346 2 6v12c0 2.201 1.794 3 3 3h15c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2zM5 5h13v2H5a1.001 1.001 0 0 1 0-2zm15 14H5.012C4.55 18.988 4 18.805 4 18V8.815c.314.113.647.185 1 .185h15v10z"></path>
                 </svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
-                <div style="font-size: 30px; color: white"><?php if ($account['currency'] == 'lira'): echo '₺ '; elseif ($account['currency'] == 'dollar'): echo '$ '; elseif ($account['currency'] == 'euro'): echo '€ '; endif;
+                <div style="font-size: 30px; color: white" data-bs-whatever="cash" data-bs-currency="<?php echo $account['currency']?>"><?php if ($account['currency'] == 'lira'): echo '₺ '; elseif ($account['currency'] == 'dollar'): echo '$ '; elseif ($account['currency'] == 'euro'): echo '€ '; endif;
                     echo $account['amount']; ?></div>
                 <div class="overlay"></div>
-                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal">Edit</button>
+                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>
             </div>
         <?php endif; ?>
         <?php if ($account['type'] == "bank-account"): ?>
@@ -28,10 +28,10 @@
                     <path d="M2 8v4.001h1V18H2v3h16l3 .001V21h1v-3h-1v-5.999h1V8L12 2 2 8zm4 10v-5.999h2V18H6zm5 0v-5.999h2V18h-2zm7 0h-2v-5.999h2V18zM14 8a2 2 0 1 1-4.001-.001A2 2 0 0 1 14 8z"></path>
                 </svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
-                <div style="font-size: 30px; color: white"><?php if ($account['currency'] == 'lira'): echo '₺ '; elseif ($account['currency'] == 'dollar'): echo '$ '; elseif ($account['currency'] == 'euro'): echo '€ '; endif;
+                <div style="font-size: 30px; color: white" data-bs-whatever="bank-account" data-bs-currency="<?php echo $account['currency']?>"><?php if ($account['currency'] == 'lira'): echo '₺ '; elseif ($account['currency'] == 'dollar'): echo '$ '; elseif ($account['currency'] == 'euro'): echo '€ '; endif;
                     echo $account['amount']; ?></div>
                 <div class="overlay"></div>
-                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal">Edit</button>
+                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>
             </div>
         <?php endif; ?>
         <?php if ($account['currency'] == "bitcoin"): ?>
@@ -42,9 +42,9 @@
                     <path d="M8 13v4H6v2h3v2h2v-2h2v2h2v-2.051c1.968-.249 3.5-1.915 3.5-3.949 0-1.32-.65-2.484-1.64-3.213A3.982 3.982 0 0 0 18 9c0-1.858-1.279-3.411-3-3.858V3h-2v2h-2V3H9v2H6v2h2v6zm6.5 4H10v-4h4.5c1.103 0 2 .897 2 2s-.897 2-2 2zM10 7h4c1.103 0 2 .897 2 2s-.897 2-2 2h-4V7z"></path>
                 </svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
-                <div style="font-size: 30px; color: white"><?php echo $account['amount']; ?></div>
+                <div style="font-size: 30px; color: white" data-bs-whatever="crypto-wallet" data-bs-currency="<?php echo $account['currency']?>"><?php echo $account['amount']; ?></div>
                 <div class="overlay"></div>
-                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal">Edit</button>
+                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>
             </div>
         <?php endif; ?>
         <?php if ($account['currency'] == "ethereum"): ?>
@@ -52,10 +52,10 @@
                  style="margin: 10px;background-image: linear-gradient(-45deg, #3F3F3F 0%, #909090 100% );border: none;">
                 <svg xmlns="http://www.w3.org/2000/svg" height="108" width="108" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#ffffff}</style><path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"/></svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
-                <div style="font-size: 30px; color: white"><?php echo $account['amount']; ?></div>
+                <div style="font-size: 30px; color: white" data-bs-whatever="crypto-wallet" data-bs-currency="<?php echo $account['currency']?>"><?php echo $account['amount']; ?></div>
                 <div style="color: white">= ₺ 25</div>
                 <div class="overlay"></div>
-                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal">Edit</button>
+                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>
             </div>
         <?php endif; ?>
         <?php if ($account['currency'] == "tether"): ?>
@@ -65,10 +65,10 @@
                     <circle cx="24" cy="24" r="20" fill="#26a69a"></circle><rect width="18" height="5" x="15" y="13" fill="#fff"></rect><path fill="#fff" d="M24,21c-4.457,0-12,0.737-12,3.5S19.543,28,24,28s12-0.737,12-3.5S28.457,21,24,21z M24,26 c-5.523,0-10-0.895-10-2c0-1.105,4.477-2,10-2s10,0.895,10,2C34,25.105,29.523,26,24,26z"></path><path fill="#fff" d="M24,24c1.095,0,2.093-0.037,3-0.098V13h-6v10.902C21.907,23.963,22.905,24,24,24z"></path><path fill="#fff" d="M25.723,25.968c-0.111,0.004-0.223,0.007-0.336,0.01C24.932,25.991,24.472,26,24,26 s-0.932-0.009-1.387-0.021c-0.113-0.003-0.225-0.006-0.336-0.01c-0.435-0.015-0.863-0.034-1.277-0.06V36h6V25.908 C26.586,25.934,26.158,25.953,25.723,25.968z"></path>
                 </svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
-                <div style="font-size: 30px; color: white"><?php echo $account['amount']; ?></div>
+                <div style="font-size: 30px; color: white" data-bs-whatever="crypto-wallet" data-bs-currency="<?php echo $account['currency']?>"><?php echo $account['amount']; ?></div>
                 <div style="color: white">= ₺ 25</div>
                 <div class="overlay"></div>
-                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal">Edit</button>
+                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>
             </div>
         <?php endif; ?>
     <?php endforeach; ?>
@@ -166,25 +166,22 @@
                 <!--                    </div>-->
                 <!--                </div>-->
 
-                <form id="edit-account-form" action="/moneyep/edit-account" method="post">
+                <form id="edit-account-form" action="edit-account" method="post">
+                    <input type="hidden" id="acc_num">
                     <div class="mb-3">
-                        <label for="account-name-input" class="col-form-label">Account Name</label>
-                        <input type="text" class="form-control" id="account-name-input">
+                        <label for="edit-account-name-input" class="col-form-label">Account Name</label>
+                        <input type="text" class="form-control" id="edit-account-name-input">
                     </div>
                     <div class="mb-3">
-                        <label for="type-input" class="col-form-label">Type of Account</label>
-                        <select class="form-select" aria-label="Type of account" id="type-input" disabled>
-                            <option selected value="cash">Cash</option>
-                            <option value="bank-account">Bank Account</option>
-                            <option value="crypto-wallet">Crypto Wallet</option>
+                        <label for="edit-type-input" class="col-form-label">Type of Account</label>
+                        <select class="form-select" aria-label="Type of account" id="edit-type-input" disabled>
+
                         </select>
                     </div>
                     <div class="mb-3 currency-container">
-                        <label for="currency-input" class="col-form-label">Currency</label>
-                        <select class="form-select" aria-label="Currency" id="currency-input" disabled>
-                            <option selected value="lira">₺</option>
-                            <option value="dollar">$</option>
-                            <option value="euro">€</option>
+                        <label for="edit-currency-input" class="col-form-label">Currency</label>
+                        <select class="form-select" aria-label="Currency" id="edit-currency-input" disabled>
+
                         </select>
                     </div>
 
@@ -321,6 +318,75 @@
 </style>
 
 <script>
+
+    const editModal = document.getElementById('EditAccountModal')
+    if (editModal) {
+        editModal.addEventListener('show.bs.modal', event => {
+            // Button that triggered the modal
+            const button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            const recipient = button.getAttribute('data-bs-whatever')
+            const name=button.parentElement.firstElementChild.nextElementSibling.innerText;
+            const type=button.parentElement.firstElementChild.nextElementSibling.nextElementSibling.getAttribute('data-bs-whatever');
+            const currency=button.parentElement.firstElementChild.nextElementSibling.nextElementSibling.getAttribute('data-bs-currency');
+            // If necessary, you could initiate an Ajax request here
+            // and then do the updating in a callback.
+
+            // Update the modal's content.
+            const modalId = editModal.querySelector('#acc_num');
+            const modalName = editModal.querySelector('#edit-account-name-input');
+            const modalType = editModal.querySelector('#edit-type-input');
+            const modalCurrency = editModal.querySelector('#edit-currency-input');
+
+
+            modalId.name = recipient;
+            modalName.value = name;
+            const option = document.createElement("option");
+            if (type=="cash"){
+                option.value = "cash";
+                option.innerText = "Cash";
+            }
+            else if (type=="bank-account"){
+                option.value = "bank-account";
+                option.innerText = "Bank Account";
+            }
+            else if (type=="crypto-wallet"){
+                option.value = "crypto-wallet";
+                option.innerText = "Crypto Wallet";
+            }
+            option.setAttribute("selected", "true");
+            modalType.appendChild(option);
+            const option2 = document.createElement("option");
+            option2.setAttribute("selected", "true");
+            if (currency=="lira"){
+                option2.value = "lira";
+                option2.innerText = "₺";
+            }
+            else if (currency=="dollar"){
+                option2.value = "dollar";
+                option2.innerText = "$";
+            }
+            else if (currency=="euro"){
+                option2.value = "euro";
+                option2.innerText = "€";
+            }
+            else if (currency=="bitcoin"){
+                option2.value = "bitcoin";
+                option2.innerText = "Bitcoin";
+            }
+            else if (currency=="ethereum"){
+                option2.value = "ethereum";
+                option2.innerText = "Ethereum";
+            }
+            else if (currency=="tether"){
+                option2.value = "tether";
+                option2.innerText = "Tether";
+            }
+            modalCurrency.appendChild(option2);
+        })
+    }
+
+
 
 
     function formsub() {
