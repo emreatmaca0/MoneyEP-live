@@ -15,3 +15,5 @@ $routes->get('/myassets', 'moneyep::myassets');
 $routes->get('/mydebts', 'moneyep::mydebts');
 $routes->get('/logout', 'moneyep::logout');
 $routes->post('/create-account', 'moneyep::add_account');
+$routes->post('/edit-account', 'moneyep::edit_account');
+$routes->post('/delete-account', 'moneyep::delete_account');

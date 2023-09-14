@@ -205,4 +205,74 @@ class moneyep extends BaseController
 
         }
     }
+
+    public function edit_account()
+    {
+        $session = session();
+        if(!$session->get('isLoggedIn')) {
+            return redirect()->to('login');
+        }
+        else
+        {
+            if ($this->request->getPost()) {
+                $accountModel = new Accounts_Model();
+                $validation = \Config\Services::validation();
+
+                $rules = [
+                    'name' => 'required|regex_match[^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]*$]|min_length[3]|max_length[30]',
+                ];
+
+
+
+                if ($this->validate($rules)) {
+                    $clean_name = esc($this->request->getPost('name'));
+                    $clean_id = esc($this->request->getPost('id'));
+                    $accountData = [
+
+                        'name' => $clean_name,
+                    ];
+                    $account = $accountModel->where('id', $clean_id)->first();
+                    if ($account['user_id'] == $session->get('id')) {
+                        $accountModel->update($clean_id, $accountData);
+                    }
+
+                    return redirect()->to('myassets');
+                } else {
+                    $data['validation_error'] = $validation->getErrors();
+                    return view('myassets', $data);
+                }
+            }
+
+        }
+    }
+
+
+
+    public function delete_account()
+    {
+        $session = session();
+        if(!$session->get('isLoggedIn')) {
+            return redirect()->to('login');
+        }
+        else
+        {
+            if ($this->request->getPost()) {
+                $accountModel = new Accounts_Model();
+                $validation = \Config\Services::validation();
+
+
+                $clean_id = esc($this->request->getPost('id'));
+                $account = $accountModel->where('id', $clean_id)->first();
+                if ($account['user_id'] == $session->get('id')) {
+                    $accountModel->delete($clean_id);
+                    return redirect()->to('myassets');
+                }
+                else
+                {
+                    return redirect()->to('myassets');
+                }
+            }
+
+        }
+    }
 }

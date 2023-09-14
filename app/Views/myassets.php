@@ -137,7 +137,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="create-account-form-submitbutton">Save changes
+                <button type="button" class="btn btn-primary" id="create-account-form-submitbutton">Create Account
                 </button>
             </div>
         </div>
@@ -165,12 +165,15 @@
                 <!--                        </select>-->
                 <!--                    </div>-->
                 <!--                </div>-->
+                <form id="delete-account-form" action="delete-account" method="post">
+                    <input type="hidden" id="del_acc_num" name="id">
+                </form>
 
                 <form id="edit-account-form" action="edit-account" method="post">
-                    <input type="hidden" id="acc_num">
+                    <input type="hidden" id="acc_num" name="id">
                     <div class="mb-3">
                         <label for="edit-account-name-input" class="col-form-label">Account Name</label>
-                        <input type="text" class="form-control" id="edit-account-name-input">
+                        <input type="text" class="form-control" id="edit-account-name-input" name="name">
                     </div>
                     <div class="mb-3">
                         <label for="edit-type-input" class="col-form-label">Type of Account</label>
@@ -189,7 +192,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger">Delete Account</button>
+                <button type="button" class="btn btn-danger" id="delete-account-form-submitbutton">Delete Account</button>
                 <button type="button" class="btn btn-primary" id="edit-account-form-submitbutton">Save changes</button>
             </div>
         </div>
@@ -334,12 +337,14 @@
 
             // Update the modal's content.
             const modalId = editModal.querySelector('#acc_num');
+            const modalDelId= editModal.querySelector('#del_acc_num');
             const modalName = editModal.querySelector('#edit-account-name-input');
             const modalType = editModal.querySelector('#edit-type-input');
             const modalCurrency = editModal.querySelector('#edit-currency-input');
 
 
-            modalId.name = recipient;
+            modalId.value = recipient;
+            modalDelId.value = recipient;
             modalName.value = name;
             const option = document.createElement("option");
             if (type=="cash"){
@@ -394,6 +399,18 @@
     }
 
     document.getElementById("create-account-form-submitbutton").addEventListener("click", formsub);
+
+    function editformsub() {
+        document.getElementById("edit-account-form").submit();
+    }
+
+    document.getElementById("edit-account-form-submitbutton").addEventListener("click", editformsub);
+
+    function deleteformsub() {
+        document.getElementById("delete-account-form").submit();
+    }
+    document.getElementById("delete-account-form-submitbutton").addEventListener("click", deleteformsub);
+
 
 
     function optionChanged() {
