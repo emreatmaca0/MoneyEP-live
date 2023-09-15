@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use App\Models\Users_Model;
 use App\Models\Accounts_Model;
+use App\Models\Debts_Model;
 
 class moneyep extends BaseController
 {
@@ -162,7 +163,7 @@ class moneyep extends BaseController
     {
         $session = session();
         $session->destroy();
-        return redirect()->to('moneyep');
+        return view('moneyep');
     }
 
     public function add_account()
@@ -270,6 +271,50 @@ class moneyep extends BaseController
                 else
                 {
                     return redirect()->to('myassets');
+                }
+            }
+
+        }
+    }
+
+    public function add_debt()
+    {
+        $session = session();
+        if(!$session->get('isLoggedIn')) {
+            return redirect()->to('login');
+        }
+        else
+        {
+            if ($this->request->getPost()) {
+                $debtModel = new Debts_Model();
+                $validation = \Config\Services::validation();
+
+                $rules = [
+                    'name' => 'required|regex_match[^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]*$]|min_length[3]|max_length[30]',
+                    'type' => 'required',
+                    'currency' => 'required',
+                    'date'=>'required',
+                ];
+
+                if ($this->validate($rules)) {
+                    $clean_name = esc($this->request->getPost('name'));
+                    $clean_type = esc($this->request->getPost('type'));
+                    $clean_currency = esc($this->request->getPost('currency'));
+                    $clean_date = esc($this->request->getPost('date'));
+                    $debtData = [
+
+                        'name' => $clean_name,
+                        'type' => $clean_type,
+                        'currency' => $clean_currency,
+                        'date' => $clean_date,
+                        'user_id' => $session->get('id')
+                    ];
+                    $debtModel->insert($debtData);
+
+                    return redirect()->to('mydebts');
+                } else {
+                    $data['validation_error'] = $validation->getErrors();
+                    return view('mydebts', $data);
                 }
             }
 

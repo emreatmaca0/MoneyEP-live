@@ -39,14 +39,14 @@
                 <!--                    </div>-->
                 <!--                </div>-->
 
-                <form>
+                <form id="create-debt-form" action="create-debt" method="post">
                     <div class="mb-3">
                         <label for="account-name-input" class="col-form-label">Debt Name</label>
-                        <input type="text" class="form-control" id="account-name-input">
+                        <input type="text" class="form-control" id="account-name-input" name="name">
                     </div>
                     <div class="mb-3">
                         <label for="type-input" class="col-form-label">Type of Debt</label>
-                        <select class="form-select" aria-label="Type of account" id="type-input">
+                        <select class="form-select" aria-label="Type of account" id="type-input" name="type">
                             <option selected value="cash">Cash</option>
                             <option value="credit">Credit</option>
                             <option value="credit-card">Credit Card</option>
@@ -54,7 +54,7 @@
                     </div>
                     <div class="mb-3 currency-container">
                         <label for="currency-input" class="col-form-label">Currency</label>
-                        <select class="form-select" aria-label="Currency" id="currency-input">
+                        <select class="form-select" aria-label="Currency" id="currency-input" name="currency">
                             <option selected value="lira">₺</option>
                             <option value="dollar">$</option>
                             <option value="euro">€</option>
@@ -62,14 +62,28 @@
                     </div>
                     <div class="mb-3">
                         <label for="date-input" class="col-form-label">Payment Due Date</label>
-                        <input type="date" class="form-control" id="date-input" min="<?php echo date('Y-m-d'); ?>">
+                        <input type="date" class="form-control" id="date-input" min="<?php echo date('Y-m-d'); ?>" name="date">
                     </div>
+
+                    <?php if (isset($validation_error)): ?>
+                        <div class="mb-3">
+                            <ul>
+
+
+                                <?php foreach ($validation_error as $item): ?>
+                                    <li style="color: red"><?php echo $item; ?></li>
+                                <?php endforeach; ?>
+
+
+                            </ul>
+                        </div>
+                    <?php endif; ?>
 
                 </form>
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" id="create-debt-form-submitbutton">Create Debt</button>
             </div>
         </div>
     </div>
@@ -122,6 +136,7 @@
                         <label for="date-input" class="col-form-label">Payment Due Date</label>
                         <input type="date" class="form-control" id="date-input" min="<?php echo date('Y-m-d'); ?>">
                     </div>
+
 
                 </form>
 
@@ -259,7 +274,11 @@
 
 <script>
 
+    function formsub() {
+        document.getElementById("create-debt-form").submit();
+    }
 
+    document.getElementById("create-debt-form-submitbutton").addEventListener("click", formsub);
 
 </script>
 
