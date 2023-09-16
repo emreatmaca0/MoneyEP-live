@@ -145,16 +145,15 @@ class moneyep extends BaseController
     public function mydebts()
     {
         $session = session();
-        $user_name = $session->get('name');
 
-        $data = [
-            'user_name' => $user_name
-        ];
+
         if(!$session->get('isLoggedIn')) {
             return redirect()->to('login');
         }
         else
         {
+            $debtModel= new Debts_Model();
+            $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
             return view('mydebts', $data);
         }
     }

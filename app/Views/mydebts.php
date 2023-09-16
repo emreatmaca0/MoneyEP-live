@@ -2,13 +2,51 @@
 <?=$this->section('dash_content')?>
 
 <div style="display: flex; flex-wrap: wrap; justify-content: flex-start;align-items: flex-start;">
-    <div class="card" style="margin: 10px">
-        <svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="M16 12h2v4h-2z"></path><path d="M20 7V5c0-1.103-.897-2-2-2H5C3.346 3 2 4.346 2 6v12c0 2.201 1.794 3 3 3h15c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2zM5 5h13v2H5a1.001 1.001 0 0 1 0-2zm15 14H5.012C4.55 18.988 4 18.805 4 18V8.815c.314.113.647.185 1 .185h15v10z"></path></svg>
-        <div style="font-size: 30px; color: white">Turkish Lira Debt</div>
-        <div style="font-size: 30px; color: white">₺ 0</div>
-        <div class="overlay"></div>
-        <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal">Edit</button>
-    </div>
+
+    <?php foreach ($debts as $debt): ?>
+    <?php if ($debt['type'] == "cash"): ?>
+            <div class="card"
+                 style="margin: 10px;background: linear-gradient(to right, #11998e, #38ef7d); border: none;">
+                <svg width="108px" height="108px" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M694.59 511.92c-121.21 0-219.47 98.26-219.47 219.47s98.26 219.47 219.47 219.47 219.47-98.26 219.47-219.47-98.26-219.47-219.47-219.47z m0 365.79c-80.69 0-146.33-65.64-146.33-146.33 0-80.69 65.64-146.33 146.33-146.33 80.68 0 146.33 65.64 146.33 146.33 0 80.69-65.65 146.33-146.33 146.33z" fill="#ffffff"></path><path d="M200.01 814.55c-23.52-39.54-24.45-87.29-2.48-127.71L411.7 292.57h127.24l101.25 184.96 64.14-35.11-82.03-149.85h35.02v-73.14h-33.38l69.95-146.29H255.02l76.34 146.29H291.6v73.14h36.84l-195.2 359.34c-34.39 63.34-32.93 138.11 3.91 200.04s101.86 98.91 173.91 98.91h126.66v-73.14H311.06c-46.02-0.01-87.53-23.61-111.05-63.17z m175.68-668.26h202.14l-34.98 73.14H413.86l-38.17-73.14zM722.03 633.93h-54.86v112.66l89.87 89.09 38.61-38.97-73.62-72.98z" fill="#ffffff"></path></g></svg>
+                <div style="font-size: 30px; color: white"><?php echo $debt['name'] ?></div>
+                <div style="font-size: 30px; color: white" data-bs-whatever="cash" data-bs-currency="<?php echo $debt['currency']?>"><?php if ($debt['currency'] == 'lira'): echo '₺ '; elseif ($debt['currency'] == 'dollar'): echo '$ '; elseif ($debt['currency'] == 'euro'): echo '€ '; endif;
+                    if ($debt['amount']==0): echo '0.00'; else: echo $debt['amount']; endif; ?></div>
+                <div style="color: white">Payment Due Date: <?php $date = date("d-m-Y", strtotime($debt['date'])); echo $date; ?></div>
+                <div class="overlay"></div>
+                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $debt['id']; ?>">Edit</button>
+            </div>
+    <?php endif; ?>
+        <?php if ($debt['type'] == "credit"): ?>
+            <div class="card"
+                 style="margin: 10px;background: linear-gradient(to right, #ffb75e, #ed8f03); border: none;">
+                <svg width="108px" height="108px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffffff" stroke-width="2.304"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="26.67" cy="32.67" r="2.67"></circle><circle cx="37.33" cy="43.33" r="2.67"></circle><line x1="37.33" y1="30" x2="26.67" y2="46"></line><rect x="8" y="24" width="48" height="28"></rect><line x1="12" y1="18" x2="52" y2="18"></line><line x1="16" y1="12" x2="48" y2="12"></line></g></svg>
+                <div style="font-size: 30px; color: white"><?php echo $debt['name'] ?></div>
+                <div style="font-size: 30px; color: white" data-bs-whatever="cash" data-bs-currency="<?php echo $debt['currency']?>"><?php if ($debt['currency'] == 'lira'): echo '₺ '; elseif ($debt['currency'] == 'dollar'): echo '$ '; elseif ($debt['currency'] == 'euro'): echo '€ '; endif;
+                    if ($debt['amount']==0): echo '0.00'; else: echo $debt['amount']; endif; ?></div>
+                <div style="color: white">Payment Due Date: <?php $date = date("d-m-Y", strtotime($debt['date'])); echo $date; ?></div>
+                <div class="overlay"></div>
+                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $debt['id']; ?>">Edit</button>
+            </div>
+        <?php endif; ?>
+        <?php if ($debt['type'] == "credit-card"): ?>
+            <div class="card"
+                 style="margin: 10px;background: linear-gradient(to right, #e53935, #e35d5b); border: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="M20 4H4c-1.103 0-2 .897-2 2v2h20V6c0-1.103-.897-2-2-2zM2 18c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-6H2v6zm3-3h6v2H5v-2z"></path></svg>
+                <div style="font-size: 30px; color: white"><?php echo $debt['name'] ?></div>
+                <div style="font-size: 30px; color: white" data-bs-whatever="cash" data-bs-currency="<?php echo $debt['currency']?>"><?php if ($debt['currency'] == 'lira'): echo '₺ '; elseif ($debt['currency'] == 'dollar'): echo '$ '; elseif ($debt['currency'] == 'euro'): echo '€ '; endif;
+                    if ($debt['amount']==0): echo '0.00'; else: echo $debt['amount']; endif; ?></div>
+                <div style="color: white">Payment Due Date: <?php $date = date("d-m-Y", strtotime($debt['date'])); echo $date; ?></div>
+                <div class="overlay"></div>
+                <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $debt['id']; ?>">Edit</button>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+
+
+
+
+
+
 </div>
 <button class="btnn"  data-bs-toggle="modal" data-bs-target="#NewAccountModal">Add Debt</button>
 
