@@ -7,7 +7,7 @@
     <?php foreach ($accounts as $account): ?>
         <?php if ($account['type'] == "cash"): ?>
             <div class="card"
-                 style="margin: 10px;background-image: linear-gradient(-45deg, #2e2e2e 0%, #68B748 100% ); border: none;">
+                 style="margin: 10px; background: linear-gradient(to right, #000000, #0f9b0f); border: none;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 24 24"
                      style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;">
                     <path d="M16 12h2v4h-2z"></path>
@@ -22,7 +22,7 @@
         <?php endif; ?>
         <?php if ($account['type'] == "bank-account"): ?>
             <div class="card"
-                 style="margin: 10px;background: linear-gradient(180deg, rgb(255 82 82) 0%, #262626 100%);border: none;">
+                 style="margin: 10px;background: linear-gradient(to right, #333333, #dd1818);border: none;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 24 24"
                      style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;">
                     <path d="M2 8v4.001h1V18H2v3h16l3 .001V21h1v-3h-1v-5.999h1V8L12 2 2 8zm4 10v-5.999h2V18H6zm5 0v-5.999h2V18h-2zm7 0h-2v-5.999h2V18zM14 8a2 2 0 1 1-4.001-.001A2 2 0 0 1 14 8z"></path>

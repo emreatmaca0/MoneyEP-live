@@ -18,3 +18,5 @@ $routes->post('/create-account', 'moneyep::add_account');
 $routes->post('/edit-account', 'moneyep::edit_account');
 $routes->post('/delete-account', 'moneyep::delete_account');
 $routes->post('/create-debt', 'moneyep::add_debt');
+$routes->post('/edit-debt', 'moneyep::edit_debt');
+$routes->post('/delete-debt', 'moneyep::delete_debt');

@@ -198,6 +198,8 @@ class moneyep extends BaseController
 
                     return redirect()->to('myassets');
                 } else {
+                    $accountModel= new Accounts_Model();
+                    $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
                     $data['validation_error'] = $validation->getErrors();
                     return view('myassets', $data);
                 }
@@ -312,8 +314,81 @@ class moneyep extends BaseController
 
                     return redirect()->to('mydebts');
                 } else {
+                    $debtModel= new Debts_Model();
+                    $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
                     $data['validation_error'] = $validation->getErrors();
                     return view('mydebts', $data);
+                }
+            }
+
+        }
+    }
+
+    public function edit_debt()
+    {
+        $session = session();
+        if(!$session->get('isLoggedIn')) {
+            return redirect()->to('login');
+        }
+        else
+        {
+            if ($this->request->getPost()) {
+                $debtModel = new Debts_Model();
+                $validation = \Config\Services::validation();
+
+                $rules = [
+                    'name' => 'required|regex_match[^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]*$]|min_length[3]|max_length[30]',
+                    'date'=>'required',
+                ];
+
+
+
+                if ($this->validate($rules)) {
+                    $clean_name = esc($this->request->getPost('name'));
+                    $clean_id = esc($this->request->getPost('id'));
+                    $clean_date = esc($this->request->getPost('date'));
+                    $debtData = [
+
+                        'name' => $clean_name,
+                        'date' => $clean_date,
+                    ];
+                    $debt = $debtModel->where('id', $clean_id)->first();
+                    if ($debt['user_id'] == $session->get('id')) {
+                        $debtModel->update($clean_id, $debtData);
+                    }
+
+                    return redirect()->to('mydebts');
+                } else {
+                    $data['validation_error'] = $validation->getErrors();
+                    return view('mydebts', $data);
+                }
+            }
+
+        }
+    }
+
+    public function delete_debt()
+    {
+        $session = session();
+        if(!$session->get('isLoggedIn')) {
+            return redirect()->to('login');
+        }
+        else
+        {
+            if ($this->request->getPost()) {
+                $debtModel = new Debts_Model();
+                $validation = \Config\Services::validation();
+
+
+                $clean_id = esc($this->request->getPost('id'));
+                $debt = $debtModel->where('id', $clean_id)->first();
+                if ($debt['user_id'] == $session->get('id')) {
+                    $debtModel->delete($clean_id);
+                    return redirect()->to('mydebts');
+                }
+                else
+                {
+                    return redirect()->to('mydebts');
                 }
             }
 
