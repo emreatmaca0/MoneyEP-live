@@ -4,6 +4,20 @@ namespace App\Controllers;
 use App\Models\Users_Model;
 use App\Models\Accounts_Model;
 use App\Models\Debts_Model;
+use CodeIgniter\HTTP\Request;
+
+
+function get_country(string $Ip_Address)
+{
+
+
+    $Geo_Plugin_XML = simplexml_load_file("http://www.geoplugin.net/xml.gp?ip=" . $Ip_Address);
+
+    $Country = $Geo_Plugin_XML->geoplugin_countryName;
+
+    return $Country;
+}
+
 
 class moneyep extends BaseController
 {
@@ -71,6 +85,8 @@ class moneyep extends BaseController
 
             if ($this->request->getPost()) {
                 $userModel = new Users_Model();
+                $accountModel = new Accounts_Model();
+                $debtModel = new Debts_Model();
                 $validation = \Config\Services::validation();
 
                 $rules = [
@@ -90,9 +106,31 @@ class moneyep extends BaseController
                     ];
                     $userModel->insert($userData);
                     $session = session();
+                    $newUser = $userModel->where('email', $clean_email)->first();
+                    $session->set('id', $newUser['id']);
                     $session->set('name', $clean_name);
                     $session->set('email', $clean_email);
                     $session->set('isLoggedIn', true);
+                    if (get_country($this->request->getIPAddress()) == 'Turkey') {
+                        $accountData = [
+                            'name' => 'TL Hesabı',
+                            'type' => 'cash',
+                            'currency' => 'lira',
+                            'user_id' => $session->get('id')
+                        ];
+                        $accountModel->insert($accountData);
+                        $debtData = [
+                            'name' => 'Borç Hesabı',
+                            'type' => 'cash',
+                            'currency' => 'lira',
+                            'date' => date("Y-m-d", strtotime("+12 month")),
+                            'user_id' => $session->get('id')
+                        ];
+                        $debtModel->insert($debtData);
+                        $session->set('default_currency', 'lira');
+                    } else {
+                        $session->set('default_currency', 'USD');
+                    }
                     return redirect()->to('dashboard');
                 } else {
                     $data['validation'] = $validation->getErrors();
@@ -394,4 +432,6 @@ class moneyep extends BaseController
 
         }
     }
+
+
 }
