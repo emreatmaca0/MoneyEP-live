@@ -128,8 +128,32 @@ class moneyep extends BaseController
                         ];
                         $debtModel->insert($debtData);
                         $session->set('default_currency', 'lira');
+                        $newUserData = [
+                            'default_currency' => 'lira',
+                        ];
+                        $userModel->update(session()->get('id'), $newUserData);
                     } else {
-                        $session->set('default_currency', 'USD');
+                        $accountData = [
+                            'name' => 'Cash Account',
+                            'type' => 'cash',
+                            'currency' => 'dollar',
+                            'user_id' => $session->get('id')
+                        ];
+                        $accountModel->insert($accountData);
+                        $debtData = [
+                            'name' => 'Debt Account',
+                            'type' => 'cash',
+                            'currency' => 'dollar',
+                            'date' => date("Y-m-d", strtotime("+12 month")),
+                            'user_id' => $session->get('id')
+                        ];
+                        $debtModel->insert($debtData);
+                        $session->set('default_currency', 'dollar');
+                        $newUserData = [
+                            'default_currency' => 'dollar',
+                        ];
+                        $userModel->update(session()->get('id'), $newUserData);
+                        $session->set('default_currency', 'dollar');
                     }
                     return redirect()->to('dashboard');
                 } else {
@@ -151,16 +175,15 @@ class moneyep extends BaseController
     public function dashboard()
     {
         $session = session();
-        $user_name = $session->get('name');
-
-        $data = [
-            'user_name' => $user_name
-        ];
         if(!$session->get('isLoggedIn')) {
             return redirect()->to('login');
         }
         else
         {
+            $accountModel= new Accounts_Model();
+            $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
+            $debtModel= new Debts_Model();
+            $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
             return view('dashboard', $data);
         }
 

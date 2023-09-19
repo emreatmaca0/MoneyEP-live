@@ -57,7 +57,7 @@
 
 <div style="display: flex; flex-wrap: wrap; justify-content: space-around;align-items: flex-start;">
     <div class="card" style="font-family: ABeeZee, sans-serif;width: 440px;height: 500px;box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;border-radius: 15px;">
-        <div class="card-header d-flex justify-content-between align-items-center"><button type="button" style="border: solid 1px gainsboro;border-radius: 15px;padding: 5px;" id="myBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">New record...</button><span>
+        <div class="card-header d-flex justify-content-between align-items-center"><button type="button" style="border: solid 1px gainsboro;border-radius: 15px;padding: 5px;" id="myBtn" data-bs-toggle="modal" data-bs-target="#NewRecordModal">New record...</button><span>
                 <select class="form-select-sm">
                     <optgroup label="This is a group">
                         <option value="12" selected="">This is item 1</option>
@@ -170,11 +170,11 @@
 
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="NewRecordModal" tabindex="-1" aria-labelledby="NewRecordModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
+        <div class="modal-content" style="border-radius: 10px">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">New Record</h1>
+                <h1 class="modal-title fs-5" id="NewRecordModalLabel">New Record</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -192,14 +192,14 @@
 <!--                    </div>-->
 <!--                </div>-->
 
-                <form>
+                <form id="create-record-form" action="create-record" method="post">
                     <div class="mb-3">
                         <label for="date-input" class="col-form-label">Date</label>
-                        <input type="date" class="form-control" id="date-input" max="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>">
+                        <input type="date" class="form-control" id="date-input" max="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>" name="date">
                     </div>
                     <div class="mb-3">
                         <label for="type-input" class="col-form-label">Type of transaction</label>
-                        <select class="form-select" aria-label="Type of transaction" id="type-input">
+                        <select class="form-select" aria-label="Type of transaction" id="type-input" name="type">
                             <option selected value="revenue">Revenue</option>
                             <option value="expense">Expense</option>
                             <option value="remittance">Remittance</option>
@@ -208,17 +208,17 @@
                     <div class="mb-3">
                         <label for="amount-input" class="col-form-label">Amount</label>
                         <div class="input-group mb-3">
-                            <select class="form-select" aria-label="Currency">
+                            <select class="form-select" aria-label="Currency" name="currency">
                                 <option selected value="lira">₺</option>
                                 <option value="dollar">$</option>
                                 <option value="euro">€</option>
                             </select>
-                            <input type="text" class="form-control" placeholder="102,55" aria-label="Amount" id="amount-input">
+                            <input type="text" class="form-control" placeholder="102.55" aria-label="Amount" id="amount-input" name="amount">
                         </div>
                     </div>
                     <div class="mb-3 category-container">
                         <label for="category-input" class="col-form-label">Category</label>
-                        <select class="form-select" aria-label="Category" id="category-input">
+                        <select class="form-select" aria-label="Category" id="category-input" name="category">
                             <option selected value="salary">Salary</option>
                             <option value="rental-income">Rental Income</option>
                             <option value="freebie">Freebie</option>
@@ -230,18 +230,20 @@
                     </div>
                     <div class="mb-3">
                         <label for="account-input" class="col-form-label">Account</label>
-                        <select class="form-select" aria-label="Account" id="account-input">
-                            <option selected>Turkish Lira Cash</option>
-                            <option value="1">Create a new account...</option>
+                        <select class="form-select" aria-label="Account" id="account-input" name="account">
+                            <?php foreach ($accounts as $account): ?>
+                            <option value="<?php echo $account['id']; ?>"><?php echo $account['name']; ?></option>
+                            <?php endforeach; ?>
+                            <option value="0">Create a new account...</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="description-input" class="col-form-label">Description</label>
-                        <input type="text" class="form-control" id="description-input">
+                        <input type="text" class="form-control" id="description-input" name="description">
                     </div>
                     <div class="mb-3">
                         <label for="dd-input" class="col-form-label">Detailed Description</label>
-                        <textarea class="form-control" id="dd-input"></textarea>
+                        <textarea class="form-control" id="dd-input" name="dd"></textarea>
                     </div>
                 </form>
 
@@ -261,10 +263,14 @@
 const amount= document.getElementById("category-input").parentElement.previousElementSibling;
 const clone = amount.cloneNode(true);
 clone.firstElementChild.innerHTML="Commission";
+clone.firstElementChild.setAttribute("for","commission-input");
 clone.firstElementChild.for="commission-input";
+clone.lastElementChild.firstElementChild.name="commission_currency";
 clone.lastElementChild.lastElementChild.value=0;
+clone.lastElementChild.lastElementChild.name="commission_amount";
 clone.id="commission-area";
 clone.lastElementChild.lastElementChild.id="commission-input";
+clone.lastElementChild.lastElementChild.ariaLabel="Commission";
 
 
 
@@ -280,6 +286,7 @@ clone.lastElementChild.lastElementChild.id="commission-input";
                 document.getElementById("commission-area").remove();
             }
             document.getElementById("category-input").previousElementSibling.innerHTML="Category";
+            document.getElementById("category-input").name="category";
             document.getElementById("category-input").innerHTML
             ='<option selected value="salary">Salary</option><option value="rental-income">Rental Income</option><option value="freebie">Freebie</option> <option value="investment">Investment</option> <option value="sales">Sales</option><option value="debt">Debt</option> <option value="other">Other</option>';
         }
@@ -291,6 +298,7 @@ clone.lastElementChild.lastElementChild.id="commission-input";
                 document.getElementById("commission-area").remove();
             }
             document.getElementById("category-input").previousElementSibling.innerHTML="Category";
+            document.getElementById("category-input").name="category";
             document.getElementById("category-input").innerHTML
             ='<option selected value="rent-expense">Rent Expense</option><option value="food">Food</option> <option value="transport">Transport</option> <option value="Education">Education</option> <option value="medical">Medical</option> <option value="entertainment">Entertainment</option> <option value="clothing">Clothing</option> <option value="debt-payment">Debt Payment</option><option value="tax">Tax</option><option value="insurance-premium">Insurance Premium</option><option value="bills">Bills</option> <option value="other">Other</option>';
 
@@ -302,8 +310,8 @@ clone.lastElementChild.lastElementChild.id="commission-input";
             var category_input=document.getElementById("category-input");
             category_input.parentElement.previousElementSibling.append(clone);
             category_input.previousElementSibling.innerHTML="Source Account";
-            category_input.innerHTML
-                ='<option selected value="1">Turkish Lira Cash</option><option value="0">Create a new account...</option>';
+            category_input.name="source";
+            category_input.innerHTML="<?php foreach ($accounts as $account): ?><option value='<?php echo $account['id']; ?>'><?php echo $account['name']; ?></option><?php endforeach; ?>";
         }
     }
 
@@ -319,8 +327,14 @@ clone.lastElementChild.lastElementChild.id="commission-input";
             const clone = debt.cloneNode(true);
             clone.id="debt-container"
             clone.firstElementChild.innerHTML="Debt";
+            clone.firstElementChild.setAttribute("for","debt-input");
             clone.lastElementChild.id="debt-input";
-            clone.lastElementChild.innerHTML='<option selected value="1">Turkish Lira Cash</option><option value="0">Create a new account...</option>';
+            clone.lastElementChild.ariaLabel="Debt";
+            clone.lastElementChild.name="debt";
+            clone.lastElementChild.innerHTML=
+                <?php foreach ($debts as $debt): ?>
+                '<option value="<?php echo $debt['id']; ?>"><?php echo $debt['name']; ?></option>'+
+                <?php endforeach; ?>
             category_input.parentElement.append(clone);
         }
         else
@@ -330,7 +344,14 @@ clone.lastElementChild.lastElementChild.id="commission-input";
 
     }
 
-
+    document.getElementById("account-input").addEventListener("change", accountChanged);
+    function accountChanged(){
+        var account_input=document.getElementById("account-input");
+        if(account_input.value==0)
+        {
+            window.location.href="/myassets";
+        }
+    }
 
 
 
