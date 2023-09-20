@@ -15,7 +15,7 @@
                 </svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
                 <div style="font-size: 30px; color: white" data-bs-whatever="cash" data-bs-currency="<?php echo $account['currency']?>"><?php if ($account['currency'] == 'lira'): echo '₺ '; elseif ($account['currency'] == 'dollar'): echo '$ '; elseif ($account['currency'] == 'euro'): echo '€ '; endif;
-                    if ($account['amount']==0): echo '0.00'; else: echo $account['amount']; endif; ?></div>
+                    if ($account['amount']==0): echo '0'; else: echo $account['amount']+0; endif; ?></div>
                 <div class="overlay"></div>
                 <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>
             </div>
@@ -29,7 +29,7 @@
                 </svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
                 <div style="font-size: 30px; color: white" data-bs-whatever="bank-account" data-bs-currency="<?php echo $account['currency']?>"><?php if ($account['currency'] == 'lira'): echo '₺ '; elseif ($account['currency'] == 'dollar'): echo '$ '; elseif ($account['currency'] == 'euro'): echo '€ '; endif;
-                    if ($account['amount']==0): echo '0.00'; else: echo $account['amount']; endif; ?></div>
+                    if ($account['amount']==0): echo '0'; else: echo $account['amount']+0; endif; ?></div>
                 <div class="overlay"></div>
                 <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>
             </div>
@@ -42,7 +42,7 @@
                     <path d="M8 13v4H6v2h3v2h2v-2h2v2h2v-2.051c1.968-.249 3.5-1.915 3.5-3.949 0-1.32-.65-2.484-1.64-3.213A3.982 3.982 0 0 0 18 9c0-1.858-1.279-3.411-3-3.858V3h-2v2h-2V3H9v2H6v2h2v6zm6.5 4H10v-4h4.5c1.103 0 2 .897 2 2s-.897 2-2 2zM10 7h4c1.103 0 2 .897 2 2s-.897 2-2 2h-4V7z"></path>
                 </svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
-                <div style="font-size: 30px; color: white" data-bs-whatever="crypto-wallet" data-bs-currency="<?php echo $account['currency']?>"><?php echo $account['amount']; ?></div>
+                <div style="font-size: 30px; color: white" data-bs-whatever="crypto-wallet" data-bs-currency="<?php echo $account['currency']?>"><?php echo $account['amount']+0; ?></div>
                 <div class="overlay"></div>
                 <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>
             </div>
@@ -52,7 +52,7 @@
                  style="margin: 10px;background-image: linear-gradient(-45deg, #3F3F3F 0%, #909090 100% );border: none;">
                 <svg xmlns="http://www.w3.org/2000/svg" height="108" width="108" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#ffffff}</style><path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"/></svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
-                <div style="font-size: 30px; color: white" data-bs-whatever="crypto-wallet" data-bs-currency="<?php echo $account['currency']?>"><?php echo $account['amount']; ?></div>
+                <div style="font-size: 30px; color: white" data-bs-whatever="crypto-wallet" data-bs-currency="<?php echo $account['currency']?>"><?php echo $account['amount']+0; ?></div>
                 <div style="color: white">= ₺ 25</div>
                 <div class="overlay"></div>
                 <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>
@@ -65,7 +65,7 @@
                     <circle cx="24" cy="24" r="20" fill="#26a69a"></circle><rect width="18" height="5" x="15" y="13" fill="#fff"></rect><path fill="#fff" d="M24,21c-4.457,0-12,0.737-12,3.5S19.543,28,24,28s12-0.737,12-3.5S28.457,21,24,21z M24,26 c-5.523,0-10-0.895-10-2c0-1.105,4.477-2,10-2s10,0.895,10,2C34,25.105,29.523,26,24,26z"></path><path fill="#fff" d="M24,24c1.095,0,2.093-0.037,3-0.098V13h-6v10.902C21.907,23.963,22.905,24,24,24z"></path><path fill="#fff" d="M25.723,25.968c-0.111,0.004-0.223,0.007-0.336,0.01C24.932,25.991,24.472,26,24,26 s-0.932-0.009-1.387-0.021c-0.113-0.003-0.225-0.006-0.336-0.01c-0.435-0.015-0.863-0.034-1.277-0.06V36h6V25.908 C26.586,25.934,26.158,25.953,25.723,25.968z"></path>
                 </svg>
                 <div style="font-size: 30px; color: white"><?php echo $account['name'] ?></div>
-                <div style="font-size: 30px; color: white" data-bs-whatever="crypto-wallet" data-bs-currency="<?php echo $account['currency']?>"><?php if ($account['amount']==0): echo '0.00'; else: echo $account['amount']; endif; ?></div>
+                <div style="font-size: 30px; color: white" data-bs-whatever="crypto-wallet" data-bs-currency="<?php echo $account['currency']?>"><?php if ($account['amount']==0): echo '0'; else: echo $account['amount']+0; endif; ?></div>
                 <div style="color: white">= ₺ 25</div>
                 <div class="overlay"></div>
                 <button class="card-btn" data-bs-toggle="modal" data-bs-target="#EditAccountModal" data-bs-whatever="<?php echo $account['id']; ?>">Edit</button>

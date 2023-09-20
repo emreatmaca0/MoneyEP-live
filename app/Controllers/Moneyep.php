@@ -19,7 +19,7 @@ function get_country(string $Ip_Address)
 }
 
 
-class moneyep extends BaseController
+class Moneyep extends BaseController
 {
 
     public function index()

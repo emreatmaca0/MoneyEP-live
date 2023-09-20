@@ -245,12 +245,27 @@
                         <label for="dd-input" class="col-form-label">Detailed Description</label>
                         <textarea class="form-control" id="dd-input" name="dd"></textarea>
                     </div>
+
+                    <?php if (isset($validation_error)): ?>
+                        <div class="mb-3">
+                            <ul>
+
+
+                                <?php foreach ($validation_error as $item): ?>
+                                    <li style="color: red"><?php echo $item; ?></li>
+                                <?php endforeach; ?>
+
+
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
                 </form>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" id="create-record-form-submitbutton">Create Record</button>
             </div>
         </div>
     </div>
@@ -259,6 +274,10 @@
 
 <script>
 
+
+    document.getElementById("create-record-form-submitbutton").addEventListener("click", function(){
+        document.getElementById("create-record-form").submit();
+    });
 
 const amount= document.getElementById("category-input").parentElement.previousElementSibling;
 const clone = amount.cloneNode(true);
