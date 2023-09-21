@@ -6,9 +6,38 @@ use App\Models\Accounts_Model;
 use App\Models\Debts_Model;
 use App\Models\Revenues_Model;
 use CodeIgniter\HTTP\Request;
+use DOMDocument;
+use DOMXPath;
 
 class Transactions extends BaseController
 {
+    function getDivContentByClass($url) {
+        // Web sayfasını çekmek için cURL kullanabiliriz.
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $html = curl_exec($ch);
+        curl_close($ch);
+
+        // HTML içeriğini bir DOM nesnesine dönüştürelim.
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($html);
+
+        // XPath kullanarak belirli bir class ismiyle hedef div'i bulalım.
+        $xpath = new \DOMXPath($dom);
+        $divs = $xpath->query("//*[contains(@class, 'YMlKec fxKbKc')]");
+
+        // İlk bulunan div'in içeriğini alalım.
+        if ($divs->length > 0) {
+            return $divs->item(0)->textContent;
+        } else {
+            return "Could not find the div.";
+        }
+    }
+
+
+
+
     public function add_record()
     {
         $session = session();
@@ -30,7 +59,7 @@ class Transactions extends BaseController
                             'date' => 'required',
                             'type' => 'required',
                             'currency' => 'required',
-                            'amount' => 'required|regex_match[^([1-9]\d{0,7}|0)([,.]\d{1,2})?$]',
+                            'amount' => 'required|regex_match[^([1-9]\d{0,8}|0)([,.]\d{1,2})?$]',
                             'category' => 'required',
                             'debt' => 'required|numeric',
                             'account' => 'required|numeric',
@@ -205,13 +234,97 @@ class Transactions extends BaseController
                                 $account= $accountModel->where('id', $clean_account)->first();
                                 if ($account['user_id'] == $session->get('id'))
                                 {
+                                    if ($account['currency']!=$clean_currency)
+                                    {
+                                        if ($account['currency']=='lira'&&$clean_currency=='dollar') {
+                                            $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='lira'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                    }
+                                    else
+                                    {
 
-                                    $accountData = [
-                                        'amount' => $account['amount'] + $clean_amount
-                                    ];
-                                    $accountModel->update($clean_account, $accountData);
-                                    $revenueModel->insert($revenueData);
-                                    return redirect()->to('dashboard');
+
+                                        $accountData = [
+                                            'amount' => $account['amount'] + $clean_amount
+                                        ];
+                                        $accountModel->update($clean_account, $accountData);
+                                        $revenueModel->insert($revenueData);
+                                        return redirect()->to('dashboard');
+                                    }
                                 }
                                 else
                                 {

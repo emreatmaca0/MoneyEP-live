@@ -302,6 +302,7 @@ class Moneyep extends BaseController
                     return redirect()->to('myassets');
                 } else {
                     $data['validation_error'] = $validation->getErrors();
+                    $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
                     return view('myassets', $data);
                 }
             }
