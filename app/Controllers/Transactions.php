@@ -96,16 +96,683 @@ class Transactions extends BaseController
                                 $account= $accountModel->where('id', $clean_account)->first();
                                 if ($debt['user_id'] == $session->get('id')&&$account['user_id'] == $session->get('id'))
                                 {
-                                    $debtData = [
-                                        'amount' => $debt['amount'] + $clean_amount
-                                    ];
-                                    $debtModel->update($clean_debt, $debtData);
-                                    $accountData = [
-                                        'amount' => $account['amount'] + $clean_amount
-                                    ];
-                                    $accountModel->update($clean_account, $accountData);
-                                    $revenueModel->insert($revenueData);
-                                    return redirect()->to('dashboard');
+                                    if ($account['currency']!=$clean_currency)
+                                    {
+                                        if ($account['currency']=='lira'&&$clean_currency=='dollar') {
+                                            $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='lira'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $clean_amount
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            $shortcurrency='TRY';
+                                            switch ($clean_currency)
+                                            {
+                                                case 'lira':
+                                                    $shortcurrency='TRY';
+                                                    break;
+                                                case 'dollar':
+                                                    $shortcurrency='USD';
+                                                    break;
+                                                case 'euro':
+                                                    $shortcurrency='EUR';
+                                                    break;
+                                            }
+                                            if ($debt['currency']=='lira')
+                                            {
+
+                                                if ($shortcurrency=='TRY')
+                                                {
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $clean_amount
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                                else
+                                                {
+                                                    $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-TRY';
+                                                    $result = $this->getDivContentByClass($url);
+                                                    $result = $clean_amount * $result;
+                                                    $result = round($result, 2);
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $result
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                if ($shortcurrency=='USD')
+                                                {
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $clean_amount
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                                else
+                                                {
+                                                    $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-USD';
+                                                    $result = $this->getDivContentByClass($url);
+                                                    $result = $clean_amount * $result;
+                                                    $result = round($result, 2);
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $result
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if ($shortcurrency=='EUR')
+                                                {
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $clean_amount
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                                else
+                                                {
+                                                    $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-EUR';
+                                                    $result = $this->getDivContentByClass($url);
+                                                    $result = $clean_amount * $result;
+                                                    $result = round($result, 2);
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $result
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                    }
+                                    else
+                                    {
+
+
+                                        $accountData = [
+                                            'amount' => $account['amount'] + $clean_amount
+                                        ];
+                                        $accountModel->update($clean_account, $accountData);
+                                        $revenueModel->insert($revenueData);
+                                        $shortcurrency='TRY';
+                                        switch ($clean_currency)
+                                        {
+                                            case 'lira':
+                                                $shortcurrency='TRY';
+                                                break;
+                                            case 'dollar':
+                                                $shortcurrency='USD';
+                                                break;
+                                            case 'euro':
+                                                $shortcurrency='EUR';
+                                                break;
+                                        }
+                                        if ($debt['currency']=='lira')
+                                        {
+
+                                            if ($shortcurrency=='TRY')
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+
+                                        }
+                                        elseif ($debt['currency']=='dollar')
+                                        {
+                                            if ($shortcurrency=='USD')
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if ($shortcurrency=='EUR')
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                        }
+                                        return redirect()->to('dashboard');
+                                    }
                                 }
                                 else
                                 {
@@ -133,16 +800,685 @@ class Transactions extends BaseController
                                 $account= $accountModel->where('id', $clean_account)->first();
                                 if ($debt['user_id'] == $session->get('id')&&$account['user_id'] == $session->get('id'))
                                 {
-                                    $debtData = [
-                                        'amount' => $debt['amount'] + $clean_amount
-                                    ];
-                                    $debtModel->update($clean_debt, $debtData);
-                                    $accountData = [
-                                        'amount' => $account['amount'] + $clean_amount
-                                    ];
-                                    $accountModel->update($clean_account, $accountData);
-                                    $revenueModel->insert($revenueData);
-                                    return redirect()->to('dashboard');
+
+
+                                    if ($account['currency']!=$clean_currency)
+                                    {
+                                        if ($account['currency']=='lira'&&$clean_currency=='dollar') {
+                                            $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='lira'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='euro')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            if ($debt['currency']=='lira')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $clean_amount
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            $shortcurrency='TRY';
+                                            switch ($clean_currency)
+                                            {
+                                                case 'lira':
+                                                    $shortcurrency='TRY';
+                                                    break;
+                                                case 'dollar':
+                                                    $shortcurrency='USD';
+                                                    break;
+                                                case 'euro':
+                                                    $shortcurrency='EUR';
+                                                    break;
+                                            }
+                                            if ($debt['currency']=='lira')
+                                            {
+
+                                                if ($shortcurrency=='TRY')
+                                                {
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $clean_amount
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                                else
+                                                {
+                                                    $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-TRY';
+                                                    $result = $this->getDivContentByClass($url);
+                                                    $result = $clean_amount * $result;
+                                                    $result = round($result, 2);
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $result
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+
+                                            }
+                                            elseif ($debt['currency']=='dollar')
+                                            {
+                                                if ($shortcurrency=='USD')
+                                                {
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $clean_amount
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                                else
+                                                {
+                                                    $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-USD';
+                                                    $result = $this->getDivContentByClass($url);
+                                                    $result = $clean_amount * $result;
+                                                    $result = round($result, 2);
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $result
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if ($shortcurrency=='EUR')
+                                                {
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $clean_amount
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                                else
+                                                {
+                                                    $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-EUR';
+                                                    $result = $this->getDivContentByClass($url);
+                                                    $result = $clean_amount * $result;
+                                                    $result = round($result, 2);
+                                                    $debtData = [
+                                                        'amount' => $debt['amount'] + $result
+                                                    ];
+                                                    $debtModel->update($clean_debt, $debtData);
+                                                }
+                                            }
+                                            return redirect()->to('dashboard');
+                                        }
+                                    }
+                                    else
+                                    {
+
+
+                                        $accountData = [
+                                            'amount' => $account['amount'] + $clean_amount
+                                        ];
+                                        $accountModel->update($clean_account, $accountData);
+                                        $revenueModel->insert($revenueData);
+                                        $shortcurrency='TRY';
+                                        switch ($clean_currency)
+                                        {
+                                            case 'lira':
+                                                $shortcurrency='TRY';
+                                                break;
+                                            case 'dollar':
+                                                $shortcurrency='USD';
+                                                break;
+                                            case 'euro':
+                                                $shortcurrency='EUR';
+                                                break;
+                                        }
+                                        if ($debt['currency']=='lira')
+                                        {
+
+                                            if ($shortcurrency=='TRY')
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-TRY';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+
+                                        }
+                                        elseif ($debt['currency']=='dollar')
+                                        {
+                                            if ($shortcurrency=='USD')
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-USD';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if ($shortcurrency=='EUR')
+                                            {
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $clean_amount
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                            else
+                                            {
+                                                $url = 'https://www.google.com/finance/quote/'.$shortcurrency.'-EUR';
+                                                $result = $this->getDivContentByClass($url);
+                                                $result = $clean_amount * $result;
+                                                $result = round($result, 2);
+                                                $debtData = [
+                                                    'amount' => $debt['amount'] + $result
+                                                ];
+                                                $debtModel->update($clean_debt, $debtData);
+                                            }
+                                        }
+                                        return redirect()->to('dashboard');
+                                    }
                                 }
                                 else
                                 {
@@ -203,37 +1539,6 @@ class Transactions extends BaseController
                                 if ($account['user_id'] == $session->get('id'))
                                 {
 
-                                    $accountData = [
-                                        'amount' => $account['amount'] + $clean_amount
-                                    ];
-                                    $accountModel->update($clean_account, $accountData);
-                                    $revenueModel->insert($revenueData);
-                                    return redirect()->to('dashboard');
-                                }
-                                else
-                                {
-                                    $data['validation_error']['unauthorized_transaction'] = 'You are not authorized to make this transaction';
-                                    $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
-                                    $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
-                                    return view('dashboard', $data);
-                                }
-                            }
-                            else
-                            {
-                                $revenueData = [
-
-                                    'date' => $clean_date,
-                                    'type' => $clean_type,
-                                    'currency' => $clean_currency,
-                                    'amount' => $clean_amount,
-                                    'category' => $clean_category,
-                                    'account' => $clean_account,
-                                    'description' => $clean_description,
-                                    'user_id' => $session->get('id')
-                                ];
-                                $account= $accountModel->where('id', $clean_account)->first();
-                                if ($account['user_id'] == $session->get('id'))
-                                {
                                     if ($account['currency']!=$clean_currency)
                                     {
                                         if ($account['currency']=='lira'&&$clean_currency=='dollar') {
@@ -248,7 +1553,7 @@ class Transactions extends BaseController
                                             $revenueModel->insert($revenueData);
                                             return redirect()->to('dashboard');
                                         }
-                                        elseif ($account['currency']=='dollar'&&$clean_currency=='lira')
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether'&&$clean_currency=='lira')
                                         {
                                             $url = 'https://www.google.com/finance/quote/TRY-USD';
                                             $result = $this->getDivContentByClass($url);
@@ -300,7 +1605,7 @@ class Transactions extends BaseController
                                             $revenueModel->insert($revenueData);
                                             return redirect()->to('dashboard');
                                         }
-                                        elseif ($account['currency']=='dollar'&&$clean_currency=='euro')
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether'&&$clean_currency=='euro')
                                         {
                                             $url = 'https://www.google.com/finance/quote/EUR-USD';
                                             $result = $this->getDivContentByClass($url);
@@ -308,6 +1613,292 @@ class Transactions extends BaseController
                                             $result = round($result, 2);
                                             $accountData = [
                                                 'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $clean_amount
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                    }
+                                    else
+                                    {
+
+
+                                        $accountData = [
+                                            'amount' => $account['amount'] + $clean_amount
+                                        ];
+                                        $accountModel->update($clean_account, $accountData);
+                                        $revenueModel->insert($revenueData);
+                                        return redirect()->to('dashboard');
+                                    }
+                                }
+                                else
+                                {
+                                    $data['validation_error']['unauthorized_transaction'] = 'You are not authorized to make this transaction';
+                                    $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
+                                    $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
+                                    return view('dashboard', $data);
+                                }
+                            }
+                            else
+                            {
+                                $revenueData = [
+
+                                    'date' => $clean_date,
+                                    'type' => $clean_type,
+                                    'currency' => $clean_currency,
+                                    'amount' => $clean_amount,
+                                    'category' => $clean_category,
+                                    'account' => $clean_account,
+                                    'description' => $clean_description,
+                                    'user_id' => $session->get('id')
+                                ];
+                                $account= $accountModel->where('id', $clean_account)->first();
+                                if ($account['user_id'] == $session->get('id'))
+                                {
+                                    if ($account['currency']!=$clean_currency)
+                                    {
+                                        if ($account['currency']=='lira'&&$clean_currency=='dollar') {
+                                            $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='lira'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum'&&$clean_currency=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-ETH';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $result
+                                            ];
+                                            $accountModel->update($clean_account, $accountData);
+
+                                            $revenueModel->insert($revenueData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $accountData = [
+                                                'amount' => $account['amount'] + $clean_amount
                                             ];
                                             $accountModel->update($clean_account, $accountData);
                                             $revenueModel->insert($revenueData);
