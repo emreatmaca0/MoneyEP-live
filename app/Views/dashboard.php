@@ -284,7 +284,7 @@ const clone = amount.cloneNode(true);
 clone.firstElementChild.innerHTML="Commission";
 clone.firstElementChild.setAttribute("for","commission-input");
 clone.firstElementChild.for="commission-input";
-clone.lastElementChild.firstElementChild.name="commission_currency";
+clone.lastElementChild.firstElementChild.remove();
 clone.lastElementChild.lastElementChild.value=0;
 clone.lastElementChild.lastElementChild.name="commission_amount";
 clone.id="commission-area";
