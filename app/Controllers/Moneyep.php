@@ -327,7 +327,7 @@ class Moneyep extends BaseController
 
                 $clean_id = esc($this->request->getPost('id'));
                 $account = $accountModel->where('id', $clean_id)->first();
-                if ($account['user_id'] == $session->get('id')) {
+                if ($account['user_id'] == $session->get('id')&&$account['amount']==0) {
                     $accountModel->delete($clean_id);
                     return redirect()->to('myassets');
                 }

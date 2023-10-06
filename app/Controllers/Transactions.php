@@ -3936,7 +3936,7 @@ class Transactions extends BaseController
                                     }
                                     if($is_source==$is_currency)
                                     {
-                                        if($source['amount']>=$clean_amount)
+                                        if($source['amount']>=$clean_amount+$clean_commission)
                                         {
                                             $is_biggest=true;
                                         }
@@ -3945,7 +3945,8 @@ class Transactions extends BaseController
                                         $url = 'https://www.google.com/finance/quote/'.$is_currency.'-'.$is_source;
                                         $result = $this->getDivContentByClass($url);
                                         $result = $clean_amount * $result;
-                                        if($source['amount']>=$result)
+                                        $commission_result=$clean_commission*$result;
+                                        if($source['amount']>=$result+$commission_result)
                                         {
                                             $is_biggest=true;
                                         }
@@ -3953,13 +3954,97 @@ class Transactions extends BaseController
 
                                 if($is_biggest)
                                 {
-                                    if ($source['currency']=='lira'&&$clean_currency=='dollar') {
+                                    if ($source['currency']=='lira'&&$clean_currency=='lira') {
+
+                                        if($clean_commission>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$clean_commission,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
+                                        $sourceData = [
+                                            'amount' => $source['amount'] - $clean_amount-$clean_commission
+                                        ];
+                                        if($account['currency']=='lira')
+                                        {
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$clean_amount
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $data['validation_error']['impossible_transaction'] = 'You cannot make this transaction';
+                                            $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
+                                            $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
+                                            return view('dashboard', $data);
+                                        }
+
+                                    }
+                                    elseif ($source['currency']=='lira'&&$clean_currency=='dollar') {
                                         $url = 'https://www.google.com/finance/quote/USD-TRY';
                                         $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        $commission_result=round($commission_result,2);
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
                                         $result = $clean_amount * $result;
                                         $result = round($result, 2);
                                         $sourceData = [
-                                            'amount' => $source['amount'] - $result
+                                            'amount' => $source['amount'] - $result-$commission_result
                                         ];
                                         if($account['currency']=='lira')
                                         {
@@ -4008,10 +4093,27 @@ class Transactions extends BaseController
                                     {
                                         $url = 'https://www.google.com/finance/quote/EUR-TRY';
                                         $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        $commission_result=round($commission_result,2);
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
                                         $result = $clean_amount * $result;
                                         $result = round($result, 2);
                                         $sourceData = [
-                                            'amount' => $source['amount'] - $result
+                                            'amount' => $source['amount'] - $result-$commission_result
                                         ];
                                         if($account['currency']=='lira')
                                         {
@@ -4057,14 +4159,99 @@ class Transactions extends BaseController
                                             return view('dashboard', $data);
                                         }
                                     }
-                                    elseif ($source['currency']=='dollar'&&$clean_currency=='lira')
+                                    elseif ($source['currency']=='dollar'||$source['currency']=='tether'&&$clean_currency=='dollar')
+                                    {
+
+                                        if($clean_commission>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$clean_commission,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
+                                        $sourceData = [
+                                            'amount' => $source['amount'] - $clean_amount-$clean_commission
+                                        ];
+                                        if($account['currency']=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar')
+                                        {
+
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$clean_amount
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $data['validation_error']['impossible_transaction'] = 'You cannot make this transaction';
+                                            $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
+                                            $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
+                                            return view('dashboard', $data);
+                                        }
+                                    }
+                                    elseif ($source['currency']=='dollar'||$source['currency']=='tether'&&$clean_currency=='lira')
                                     {
                                         $url = 'https://www.google.com/finance/quote/TRY-USD';
                                         $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        $commission_result=round($commission_result,2);
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
                                         $result = $clean_amount * $result;
                                         $result = round($result, 2);
                                         $sourceData = [
-                                            'amount' => $source['amount'] - $result
+                                            'amount' => $source['amount'] - $result-$commission_result
                                         ];
                                         if($account['currency']=='lira')
                                         {
@@ -4113,14 +4300,31 @@ class Transactions extends BaseController
                                             return view('dashboard', $data);
                                         }
                                     }
-                                    elseif ($source['currency']=='dollar'&&$clean_currency=='euro')
+                                    elseif ($source['currency']=='dollar'||$source['currency']=='tether'&&$clean_currency=='euro')
                                     {
                                         $url = 'https://www.google.com/finance/quote/EUR-USD';
                                         $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        $commission_result=round($commission_result,2);
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
                                         $result = $clean_amount * $result;
                                         $result = round($result, 2);
                                         $sourceData = [
-                                            'amount' => $source['amount'] - $result
+                                            'amount' => $source['amount'] - $result-$commission_result
                                         ];
                                         if($account['currency']=='lira')
                                         {
@@ -4166,14 +4370,100 @@ class Transactions extends BaseController
                                             return view('dashboard', $data);
                                         }
                                     }
+                                    elseif ($source['currency']=='euro'&&$clean_currency=='euro')
+                                    {
+
+                                        if($clean_commission>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$clean_commission,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
+
+                                        $sourceData = [
+                                            'amount' => $source['amount'] - $clean_amount-$clean_commission
+                                        ];
+                                        if($account['currency']=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro')
+                                        {
+
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$clean_amount
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $data['validation_error']['impossible_transaction'] = 'You cannot make this transaction';
+                                            $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
+                                            $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
+                                            return view('dashboard', $data);
+                                        }
+                                    }
                                     elseif ($source['currency']=='euro'&&$clean_currency=='lira')
                                     {
                                         $url = 'https://www.google.com/finance/quote/TRY-EUR';
                                         $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        $commission_result=round($commission_result,2);
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
                                         $result = $clean_amount * $result;
                                         $result = round($result, 2);
                                         $sourceData = [
-                                            'amount' => $source['amount'] - $result
+                                            'amount' => $source['amount'] - $result-$commission_result
                                         ];
                                         if($account['currency']=='lira')
                                         {
@@ -4223,10 +4513,27 @@ class Transactions extends BaseController
                                     {
                                         $url = 'https://www.google.com/finance/quote/USD-EUR';
                                         $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        $commission_result=round($commission_result,2);
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
                                         $result = $clean_amount * $result;
                                         $result = round($result, 2);
                                         $sourceData = [
-                                            'amount' => $source['amount'] - $result
+                                            'amount' => $source['amount'] - $result-$commission_result
                                         ];
                                         if($account['currency']=='lira')
                                         {
@@ -4276,9 +4583,25 @@ class Transactions extends BaseController
                                     {
                                         $url = 'https://www.google.com/finance/quote/TRY-BTC';
                                         $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
                                         $result = $clean_amount * $result;
                                         $sourceData = [
-                                            'amount' => $source['amount'] - $result
+                                            'amount' => $source['amount'] - $result-$commission_result
                                         ];
                                         if($account['currency']=='lira')
                                         {
@@ -4354,9 +4677,25 @@ class Transactions extends BaseController
                                     {
                                         $url = 'https://www.google.com/finance/quote/USD-BTC';
                                         $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
                                         $result = $clean_amount * $result;
                                         $sourceData = [
-                                            'amount' => $source['amount'] - $result
+                                            'amount' => $source['amount'] - $result-$commission_result
                                         ];
                                         if($account['currency']=='lira')
                                         {
@@ -4432,9 +4771,25 @@ class Transactions extends BaseController
                                     {
                                         $url = 'https://www.google.com/finance/quote/EUR-BTC';
                                         $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
                                         $result = $clean_amount * $result;
                                         $sourceData = [
-                                            'amount' => $source['amount'] - $result
+                                            'amount' => $source['amount'] - $result-$commission_result
                                         ];
                                         if($account['currency']=='lira')
                                         {
@@ -4490,6 +4845,291 @@ class Transactions extends BaseController
                                         }
                                         elseif ($account['currency']=='bitcoin')
                                         {
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $data['validation_error']['impossible_transaction'] = 'You cannot make this transaction';
+                                            $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
+                                            $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
+                                            return view('dashboard', $data);
+                                        }
+                                    }
+                                    elseif ($source['currency']=='ethereum'&&$clean_currency=='lira')
+                                    {
+                                        $url = 'https://www.google.com/finance/quote/TRY-ETH';
+                                        $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
+                                        $result = $clean_amount * $result;
+                                        $sourceData = [
+                                            'amount' => $source['amount'] - $result-$commission_result
+                                        ];
+                                        if($account['currency']=='lira')
+                                        {
+
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$clean_amount
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum')
+                                        {
+
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/TRY-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $data['validation_error']['impossible_transaction'] = 'You cannot make this transaction';
+                                            $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
+                                            $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
+                                            return view('dashboard', $data);
+                                        }
+                                    }
+                                    elseif ($source['currency']=='ethereum'&&$clean_currency=='dollar')
+                                    {
+                                        $url = 'https://www.google.com/finance/quote/USD-ETH';
+                                        $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
+                                        $result = $clean_amount * $result;
+                                        $sourceData = [
+                                            'amount' => $source['amount'] - $result-$commission_result
+                                        ];
+                                        if($account['currency']=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-EUR';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether')
+                                        {
+
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$clean_amount
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum')
+                                        {
+
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/USD-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        else
+                                        {
+                                            $data['validation_error']['impossible_transaction'] = 'You cannot make this transaction';
+                                            $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
+                                            $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
+                                            return view('dashboard', $data);
+                                        }
+                                    }
+                                    elseif ($source['currency']=='ethereum'&&$clean_currency=='euro')
+                                    {
+                                        $url = 'https://www.google.com/finance/quote/EUR-ETH';
+                                        $result = $this->getDivContentByClass($url);
+                                        $commission_result=$clean_commission*$result;
+                                        if($commission_result>0)
+                                        {
+                                            $commission_expenseData=[
+                                                'date'=>$clean_date,
+                                                'type'=>'expense',
+                                                'currency'=>$clean_currency,
+                                                'amount'=>$commission_result,
+                                                'category'=>'commission',
+                                                'account'=>$source['id'],
+                                                'description'=>'Commission',
+                                                'user_id'=>$session->get('id')
+                                            ];
+                                            $EX_Model=new Expenses_Model();
+                                            $EX_Model->insert($commission_expenseData);
+                                        }
+                                        $result = $clean_amount * $result;
+                                        $sourceData = [
+                                            'amount' => $source['amount'] - $result-$commission_result
+                                        ];
+                                        if($account['currency']=='lira')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-TRY';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='euro')
+                                        {
+
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$clean_amount
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='dollar'||$account['currency']=='tether')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-USD';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
+                                            $result = round($result, 2);
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='ethereum')
+                                        {
+
+                                            $accountData=[
+                                                'amount'=>$account['amount']+$result
+                                            ];
+                                            $accountModel->update($clean_source, $sourceData);
+                                            $accountModel->update($clean_account, $accountData);
+                                            $remittanceModel->insert($remittanceData);
+                                            return redirect()->to('dashboard');
+                                        }
+                                        elseif ($account['currency']=='bitcoin')
+                                        {
+                                            $url = 'https://www.google.com/finance/quote/EUR-BTC';
+                                            $result = $this->getDivContentByClass($url);
+                                            $result = $clean_amount * $result;
                                             $accountData=[
                                                 'amount'=>$account['amount']+$result
                                             ];
