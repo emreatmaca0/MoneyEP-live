@@ -4,6 +4,9 @@ namespace App\Controllers;
 use App\Models\Users_Model;
 use App\Models\Accounts_Model;
 use App\Models\Debts_Model;
+use App\Models\Revenues_Model;
+use App\Models\Expenses_Model;
+use App\Models\Remittances_Model;
 use CodeIgniter\HTTP\Request;
 
 
@@ -61,6 +64,7 @@ class Moneyep extends BaseController
                     $session->set('id', $user['id']);
                     $session->set('name', $user['name']);
                     $session->set('email', $user['email']);
+                    $session->set('password', $user['password']);
                     $session->set('isLoggedIn', true);
                     return redirect()->to('dashboard');
                 } else {
@@ -184,9 +188,30 @@ class Moneyep extends BaseController
             $data['accounts'] = $accountModel->where('user_id', $session->get('id'))->findAll();
             $debtModel= new Debts_Model();
             $data['debts'] = $debtModel->where('user_id', $session->get('id'))->findAll();
+            $revenueModel= new Revenues_Model();
+            $data['transactions'] = $revenueModel->where('user_id', $session->get('id'))->findAll();
+            $expenseModel= new Expenses_Model();
+            $remittanceModel= new Remittances_Model();
+            array_push($data['transactions'], ...$expenseModel->where('user_id', $session->get('id'))->findAll());
+            array_push($data['transactions'], ...$remittanceModel->where('user_id', $session->get('id'))->findAll());
+            krsort($data['transactions']);
             return view('dashboard', $data);
         }
 
+    }
+
+    public function account_settings()
+    {
+        $session = session();
+        if(!$session->get('isLoggedIn')) {
+            return redirect()->to('login');
+        }
+        else
+        {
+            $userModel= new Users_Model();
+            $data['user'] = $userModel->where('id', $session->get('id'))->first();
+            return view('account-settings', $data);
+        }
     }
 
     public function myassets()

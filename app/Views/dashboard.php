@@ -76,54 +76,15 @@
                 </tr>
                 </thead>
                 <tbody>
+                <?php /*foreach ($transactions as $record): */?><!--
                 <tr>
-                    <td scope="row">01/08/2023</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <td scope="row"><?php /*echo $record['date']; */?></td>
+                    <td><?php /*echo $record['type']; */?></td>
+                    <td><?php /*echo $record['description']; */?></td>
+                    <td><?php /*switch ($record['currency']){case 'lira':echo '₺ ';break;case 'dollar':echo '$ ';break;case 'euro':echo '€ ';break;} echo $record['amount']+0; */?></td>
                 </tr>
-                <tr>
-                    <td scope="row">2</td>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <td scope="row">3</td>
-                    <td>Larry the Bird</td>
-                    <td>@twitter</td>
-                    <td>Cell 4</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Cell 2</td>
-                    <td>Cell 3</td>
-                    <td>Cell 4</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>Cell 2</td>
-                    <td>Cell 3</td>
-                    <td>Cell 4</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>Cell 2</td>
-                    <td>Cell 3</td>
-                    <td>Cell 4</td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>Cell 2</td>
-                    <td>Cell 3</td>
-                    <td>Cell 4</td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>Cell 2</td>
-                    <td>Cell 3</td>
-                    <td>Cell 4</td>
-                </tr>
+                --><?php /*endforeach; */?>
+
                 </tbody>
             </table>
         </div>
@@ -232,7 +193,7 @@
                         <label for="account-input" class="col-form-label">Account</label>
                         <select class="form-select" aria-label="Account" id="account-input" name="account">
                             <?php foreach ($accounts as $account): ?>
-                            <option value="<?php echo $account['id']; ?>"><?php echo $account['name']; ?></option>
+                            <option value="<?php echo $account['id']; ?>"><?php echo $account['name'].' ('; switch ($account['currency']){case 'lira':echo '₺ ';break;case 'dollar':echo '$ ';break;case 'euro':echo '€ ';break;} echo $account['amount']+0; echo ')';?></option>
                             <?php endforeach; ?>
                             <option value="0">Create a new account...</option>
                         </select>
@@ -330,7 +291,7 @@ clone.lastElementChild.lastElementChild.ariaLabel="Commission";
             category_input.parentElement.previousElementSibling.append(clone);
             category_input.previousElementSibling.innerHTML="Source Account";
             category_input.name="source";
-            category_input.innerHTML="<?php foreach ($accounts as $account): ?><option value='<?php echo $account['id']; ?>'><?php echo $account['name']; ?></option><?php endforeach; ?>";
+            category_input.innerHTML="<?php foreach ($accounts as $account): ?><option value='<?php echo $account['id']; ?>'><?php  echo $account['name'].' ('; switch ($account['currency']){case 'lira':echo '₺ ';break;case 'dollar':echo '$ ';break;case 'euro':echo '€ ';break;} echo $account['amount']+0; echo ')'; ?></option><?php endforeach; ?>";
         }
     }
 

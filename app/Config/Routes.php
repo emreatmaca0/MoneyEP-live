@@ -21,3 +21,4 @@ $routes->post('/create-debt', 'moneyep::add_debt');
 $routes->post('/edit-debt', 'moneyep::edit_debt');
 $routes->post('/delete-debt', 'moneyep::delete_debt');
 $routes->post('/create-record', 'Transactions::add_record');
+$routes->get('/account-settings','moneyep::account_settings');
